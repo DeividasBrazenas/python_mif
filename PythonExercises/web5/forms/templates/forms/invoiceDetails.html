@@ -1,0 +1,91 @@
+{% extends "forms/base.html" %}
+{% block content %}
+
+    {% load humanize %}
+    <div class="card w-100 mb-3">
+        <div class="card-body text-center">
+            <h5 class="card-title">Act ({{ invoice.id | stringformat:"03d" }})
+                for {{ invoice.institution }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+                By {{ invoice.responsible_worker.first_name }} {{ invoice.responsible_worker.last_name }}
+            </h6>
+            <p class="card-text">Location: {{ invoice.location }}</p>
+
+            <div class="card-header">Related invoice:</div>
+            <dl id="invoice-details" class="row text-left ml-3">
+                <dt class="col-sm-3 border-right text-right">Seller:</dt>
+                <dd class="col-sm-9">{{ invoice.seller }}</dd>
+
+                <dt class="col-sm-3 border-right text-right">Invoice series:</dt>
+                <dd class="col-sm-9">{{ invoice.series }}</dd>
+
+                <dt class="col-sm-3 border-right text-right">Sellers code:</dt>
+                <dd class="col-sm-9">{{ invoice.sellers_code }}</dd>
+
+                <dt class="col-sm-3 border-right text-right">Buy date:</dt>
+                <dd class="col-sm-9">{{ invoice.date | date:"Y M d" }}</dd>
+            </dl>
+
+            <div class="card-header">Commisioners</div>
+            <ul class="list-group">
+                {% for commisioner in invoice.commissioners.all %}
+                    <li class="list-group-item">{{ commisioner.first_name }} {{ commisioner.last_name }}</li>
+                {% empty %}
+                    <li class="list-group-item">No assigned commisioners...</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {% load mathfilters %}
+
+    <div class="d-flex justify-content-center mb-3">
+        <div>
+            <a class="btn btn-outline-primary" href="{% url 'forms:product_form' invoice.id %}">Add product</a>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Amount Type</th>
+            <th scope="col">Price</th>
+            <th scope="col">Total</th>
+            <th scope="col">Reason</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in invoice.products.all %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ product.name }}</td>
+                <td>{{ product.amount }}</td>
+                <td>{{ product.amount_type }}</td>
+                <td>{{ product.sum | div:product.amount | stringformat:".2f" }}</td>
+                <td>{{ product.sum | stringformat:".2f" }}</td>
+                <td>{{ product.reason }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td class="text-center" colspan="7">No data</td>
+            </tr>
+        {% endfor %}
+        <tr class="bg-light text-dark">
+            <th class="text-right" colspan="5">Total:</th>
+            <td class="text-left" colspan="2">{{ product_total | stringformat:".2f" }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-center">
+        <div>
+            <a class="btn btn-outline-primary ml-auto"
+               href="{% url 'forms:invoice_form_details_pdf' invoice.id %}">Export PDF</a>
+        </div>
+    </div>
+
+
+{% endblock content %}

@@ -1,0 +1,29 @@
+{% extends "forms/base.html" %}
+{% block content %}
+
+    {% load humanize %}
+    <div class="mb-2">
+        <a class="btn btn-outline-primary ml-auto" href="{% url 'forms:invoice_form' %}">New form</a>
+    </div>
+
+    {% if invoices %}
+
+        {% for invoice in invoices %}
+            <div class="card w-100 mb-3">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Act ({{ invoice.id | stringformat:"03d" }})
+                        for {{ invoice.institution }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        By {{ invoice.responsible_worker.first_name }} {{ invoice.responsible_worker.last_name }}
+                    </h6>
+                    <p class="card-text">Location: {{ invoice.location }}</p>
+                    <a href="{% url "forms:invoice_form_details" invoice.id %}"
+                       class="w-100 btn btn-outline-primary">Details</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No invoices available</p>
+    {% endif %}
+
+{% endblock content %}

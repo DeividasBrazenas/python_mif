@@ -1,0 +1,14 @@
+{% extends "forms/base.html" %}
+{% block content %}
+    <div class="text-center">
+        <div class="spinner">
+            <div class="spinner-border" role="status" style="align-content: center ;width: 5rem; height: 5rem">
+            </div>
+            <h2>
+                <small class="text-muted">Logging out...</small>
+            </h2>
+        </div>
+    </div>
+
+    <meta http-equiv="refresh" content="2;url={% url 'users:login' %}">
+{% endblock content %}
