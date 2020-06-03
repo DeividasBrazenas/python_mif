@@ -108,7 +108,7 @@ print(n11_diff())
 # 12. Pasirinktos funkcijos apibrėžtinį ir neapibrėžtinį integralus
 def n12_integral():
     x = sp.Symbol('x')
-    a = sp.Symbol('y')
-    b = sp.Symbol('z')
+    a = sp.Symbol('a')
+    b = sp.Symbol('b')
     y = 6 * x + 42
     return sp.integrate(y, (x,)), sp.integrate(y, (x, a, b))
